@@ -19,6 +19,11 @@ public class readFile {
             x = new double[dim];
             y = new double[dim];
             System.out.println("This data set should contain " + dim + " data points. ");
+            while (!((line = bufferedReader.readLine()).contains("EDGE_WEIGHT_TYPE"))) {
+                System.out.println(line);
+            }
+            String type = (line.split(" : "))[1];
+            System.out.println("This data set contains information of " + type + " type. ");
             while (!((line = bufferedReader.readLine()).contains("NODE_COORD_SECTION"))) {
                 System.out.println(line);
             }
@@ -57,5 +62,3 @@ public class readFile {
         s.close();
     }
 }
-// hallo
-// tschuess
