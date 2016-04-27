@@ -7,8 +7,13 @@ public class readFile {
         System.out.print("Enter file name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
+<<<<<<< HEAD
         double[] x = null;
         double[] y = null;
+=======
+        double[] x=null;
+        double[] y=null;
+>>>>>>> pr/5
         try {
             FileReader fileReader = new FileReader(tspfile);
             Scanner s = new Scanner(new File(tspfile));
