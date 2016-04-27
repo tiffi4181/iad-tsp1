@@ -1,13 +1,14 @@
 import java.io.*;
 import java.util.Scanner;
+import java.math.*;
 
 public class readFile {
     public static void main(String[] args) {
         System.out.print("Enter file name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
-        double[] x;
-        double[] y;
+        double[] x=null;
+        double[] y=null;
         try {
             FileReader fileReader = new FileReader(tspfile);
             Scanner s = new Scanner(new File(tspfile));
@@ -15,7 +16,7 @@ public class readFile {
             while (!((line = bufferedReader.readLine()).contains("DIMENSION"))) {
                 System.out.println(line);
             }
-            int dim = Integer.parseInt((line.split(" : "))[1]);
+            int dim = Integer.parseInt((line.split(": "))[1]);
             x = new double[dim];
             y = new double[dim];
             System.out.println("This data set should contain " + dim + " data points. ");
@@ -53,5 +54,14 @@ public class readFile {
             System.out.println("Error reading file '"+ tspfile + "'");
         }
         
+        System.out.println(euc_2d(0, 1, x, y));
+        
+    }
+    
+    public static int euc_2d(int i, int j, double x[], double y[]){
+    	double xd=x[i]-x[j];
+    	double yd=y[i]-y[j];
+    	int dij=(int)Math.round(Math.sqrt(xd*xd+ yd*yd));
+    	return dij;
     }
 }
