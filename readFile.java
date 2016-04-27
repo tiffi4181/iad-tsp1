@@ -55,6 +55,14 @@ public class readFile {
             System.out.println("Error reading file '"+ tspfile + "'");
         }
         
+        System.out.println(euc_2d(0, 1, x, y));
+        
+    }
+    
+    public static int euc_2d(int i, int j, double[] x, double[] y){
+    	double xd = x[i] - x[j];
+    	double yd = y[i] - y[j];
+    	return (int)Math.round(Math.sqrt(xd * xd + yd * yd));
     }
     
     public static int geo( int i, int j, double[] x, double[] y ) {
