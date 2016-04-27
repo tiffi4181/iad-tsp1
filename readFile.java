@@ -7,13 +7,8 @@ public class readFile {
         System.out.print("Enter file name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
-<<<<<<< HEAD
         double[] x = null;
         double[] y = null;
-=======
-        double[] x=null;
-        double[] y=null;
->>>>>>> pr/5
         try {
             FileReader fileReader = new FileReader(tspfile);
             Scanner s = new Scanner(new File(tspfile));
@@ -53,14 +48,49 @@ public class readFile {
             }
             bufferedReader.close();
             s.close();
-            System.out.println(geo(0,1,x,y));
+            PrintWriter writer = new PrintWriter(tspfile + "-random-lenghts.txt", "UTF-8");
+            long[] verylongarray = new long[1000000];
+            for(int uptoamillion = 0; uptoamillion < 1000000; uptoamillion++) {
+                int[] tour = new int[n];
+                int start = (int)Math.floor(Math.random() * n);
+                tour[0] = start;
+                for(int i = 1; i < n; i++) {
+                    tour[i] = -1;
+                }
+                int i = 1;
+                long l = 0;
+                while(i < n) {
+                    int random = (int)Math.floor(Math.random() * n);
+                    boolean found = false;
+                    for (int j = 0; j < i; j++) {
+                        if (random == tour[j]) {
+                            found = true;
+                        }
+                    }
+                    if(!found) {
+                        tour[i] = random;
+                        if(type.contains("GEO")) {
+                            l = l + geo(tour[i-1],tour[i],x,y);
+                        } else {
+                            l = l + euc_2d(tour[i-1],tour[i],x,y);
+                        }
+                        i++;
+                    }
+                }
+                if(type.contains("GEO")) {
+                    l = l + geo(tour[n-1],tour[0],x,y);
+                } else {
+                    l = l + euc_2d(tour[n-1],tour[0],x,y);
+                }
+                writer.println(l);
+                verylongarray[uptoamillion] = l;
+            }
+            writer.close();
         } catch(FileNotFoundException ex) {
             System.out.println("Unable to open file'" + tspfile + "'");
         } catch(IOException ex) {
             System.out.println("Error reading file '"+ tspfile + "'");
         }
-        
-        System.out.println(euc_2d(0, 1, x, y));
         
     }
     
@@ -71,16 +101,16 @@ public class readFile {
     }
     
     public static int geo( int i, int j, double[] x, double[] y ) {
-        long deg = Math.round(x[i]);
+        int deg = (int)Math.floor(x[i]);
         double min = x[i] - deg;
         double latitude1 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = Math.round(y[i]);
+        deg = (int)Math.floor(y[i]);
         min = y[i] - deg;
         double longitude1 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = Math.round(x[j]);
+        deg = (int)Math.floor(x[j]);
         min = x[j] - deg;
         double latitude2 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = Math.round(y[j]);
+        deg = (int)Math.floor(y[j]);
         min = y[j] - deg;
         double longitude2 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
         double RRR = 6378.388;
