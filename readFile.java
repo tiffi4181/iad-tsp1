@@ -9,8 +9,8 @@ public class readFile {
         System.out.print("Enter file name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
-        double[] x = null;
-        double[] y = null;
+        float[] x = null;
+        float[] y = null;
         try {
             FileReader fileReader = new FileReader(tspfile);
             Scanner s = new Scanner(new File(tspfile));
@@ -19,8 +19,8 @@ public class readFile {
                 System.out.println(line);
             }
             int dim = Integer.parseInt((line.split(": "))[1]);
-            x = new double[dim];
-            y = new double[dim];
+            x = new float[dim];
+            y = new float[dim];
             System.out.println("This data set should contain " + dim + " data points. ");
             while (!((line = bufferedReader.readLine()).contains("EDGE_WEIGHT_TYPE"))) {
                 System.out.println(line);
@@ -33,8 +33,8 @@ public class readFile {
             int n = 0;
             while(!(s.nextLine().contains("NODE_COORD_SECTION"))) { }
             while (!(s.next().contains("EOF"))) {
-                x[n] = Double.parseDouble(s.next());
-                y[n] = Double.parseDouble(s.next());
+                x[n] = Float.parseFloat(s.next());
+                y[n] = Float.parseFloat(s.next());
                 s.nextLine();
                 n++;
             }
@@ -96,13 +96,11 @@ public class readFile {
                 }
                 writer.close();
                 int max = 0;
+                int min = 2147483647;
                 for(int i = 0; i < numberofpaths; i++) {
                     if(verylongarray[i] > max) {
                         max = verylongarray[i];
                     }
-                }
-                int min = max;
-                for(int i = 0; i < numberofpaths; i++) {
                     if(verylongarray[i] < min) {
                         min = verylongarray[i];
                     }
@@ -119,29 +117,18 @@ public class readFile {
         
     }
     
-    public static int euc_2d(int i, int j, double[] x, double[] y){
-    	double xd = x[i] - x[j];
-    	double yd = y[i] - y[j];
-    	return (int)Math.round(Math.sqrt(xd * xd + yd * yd));
+    public static int euc_2d(int i, int j, float[] x, float[] y){
+    	float xd = x[i] - x[j];
+    	float yd = y[i] - y[j];
+    	return (int)(Math.sqrt(xd * xd + yd * yd));
     }
     
-    public static int geo( int i, int j, double[] x, double[] y ) {
-        int deg = (int)Math.floor(x[i]);
-        double min = x[i] - deg;
-        double latitude1 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = (int)Math.floor(y[i]);
-        min = y[i] - deg;
-        double longitude1 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = (int)Math.floor(x[j]);
-        min = x[j] - deg;
-        double latitude2 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        deg = (int)Math.floor(y[j]);
-        min = y[j] - deg;
-        double longitude2 = Math.PI * (deg + 5.0 * min / 3.0) / 180.0;
-        double RRR = 6378.388;
-        double q1 = Math.cos(longitude1 - longitude2);
-        double q2 = Math.cos(latitude1 - latitude2);
-        double q3 = Math.cos(latitude1 + latitude2);
-        return (int)(RRR * Math.acos(0.5 * ((1.0 + q1) * q2 - (1.0 - q1) * q3)) + 1.0);
+    public static int geo( int i, int j, float[] x, float[] y ) {
+        double latitude1 = Math.PI * (Math.floor(x[i]) + 5.0 * (x[i] - Math.floor(x[i])) / 3.0) / 180.0;
+        double longitude1 = Math.PI * (Math.floor(y[i]) + 5.0 * (y[i] - Math.floor(y[i])) / 3.0) / 180.0;
+        double latitude2 = Math.PI * (Math.floor(x[j]) + 5.0 * (x[j] - Math.floor(x[j])) / 3.0) / 180.0;
+        double longitude2 = Math.PI * (Math.floor(y[j]) + 5.0 * (y[j] - Math.floor(y[j])) / 3.0) / 180.0;
+        double q = Math.cos(longitude1 - longitude2);
+        return (int)(6378.388 * Math.acos(0.5 * ((1.0 + q) * Math.cos(latitude1 - latitude2) - (1.0 - q) * Math.cos(latitude1 + latitude2))) + 1.0);
     }
 }
