@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.Scanner;
 import java.math.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class readFile {
     public static void main(String[] args) {
@@ -42,10 +44,6 @@ public class readFile {
             } else {
                 System.out.println("The data set seems to be incomplete");
             }
-            System.out.println("#\tx\ty");
-            for (int i = 0; i<n; i++) {
-                System.out.println(i + "\t" + x[i] + "\t" + y[i]);
-            }
             bufferedReader.close();
             s.close();
             System.out.println("Data saved. What do you want to do?");
@@ -57,39 +55,41 @@ public class readFile {
                 System.out.print("How many paths to generate? ");
                 int numberofpaths = Keyboard.readInt();
                 System.out.println("Generating random paths...");
-                PrintWriter writer = new PrintWriter(tspfile + "-random-lenghts.txt", "UTF-8");
+                PrintWriter writer = new PrintWriter("random-lenghts.dat", "UTF-8");
                 int[] verylongarray = new int[numberofpaths];
                 for(int uptoamillion = 0; uptoamillion < numberofpaths; uptoamillion++) {
-                    int[] tour = new int[n];
                     int start = (int)Math.floor(Math.random() * n);
-                    tour[0] = start;
-                    for(int i = 1; i < n; i++) {
-                        tour[i] = -1;
-                    }
-                    int i = 1;
                     int l = 0;
-                    while(i < n) {
-                        int random = (int)Math.floor(Math.random() * n);
-                    boolean found = false;
-                        for (int j = 0; j < i; j++) {
-                            if (random == tour[j]) {
-                                found = true;
-                            }
+                    ArrayList<Integer> tourshuffled = new ArrayList<Integer>();
+                    for(int i = 0; i < n; i++) {
+                        if(i != start) {
+                            tourshuffled.add(i);
                         }
-                        if(!found) {
-                            tour[i] = random;
+                    }
+                    Collections.shuffle(tourshuffled);
+                    boolean firstnode = true;
+                    int lastone = -1;
+                    for(int index : tourshuffled) {
+                        if(firstnode) {
+                            firstnode = false;
                             if(type.contains("GEO")) {
-                                l = l + geo(tour[i-1],tour[i],x,y);
+                                l = l + geo(start,index,x,y);
                             } else {
-                                l = l + euc_2d(tour[i-1],tour[i],x,y);
+                                l = l + euc_2d(start,index,x,y);
                             }
-                            i++;
+                        } else {
+                            if(type.contains("GEO")) {
+                                l = l + geo(lastone,index,x,y);
+                            } else {
+                                l = l + euc_2d(lastone,index,x,y);
+                            }
                         }
+                        lastone = index;
                     }
                     if(type.contains("GEO")) {
-                        l = l + geo(tour[n-1],tour[0],x,y);
+                        l = l + geo(lastone,start,x,y);
                     } else {
-                        l = l + euc_2d(tour[n-1],tour[0],x,y);
+                        l = l + euc_2d(lastone,start,x,y);
                     }
                     writer.println(l);
                     verylongarray[uptoamillion] = l;
