@@ -31,8 +31,8 @@ public class readFile {
             int n = 0;
             while(!(s.nextLine().contains("NODE_COORD_SECTION"))) { }
             while (!(s.next().contains("EOF"))) {
-                x[n] = s.nextDouble();
-                y[n] = s.nextDouble();
+                x[n] = Double.parseDouble(s.next());
+                y[n] = Double.parseDouble(s.next());
                 s.nextLine();
                 n++;
             }
