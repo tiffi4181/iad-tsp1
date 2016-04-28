@@ -1,16 +1,18 @@
 import java.io.*;
 import java.util.Scanner;
-import java.math.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.math.*;
 
 public class readFile {
+    
+    public static float[] x = null;
+    public static float[] y = null;
+    
     public static void main(String[] args) {
         System.out.print("Enter file name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
-        float[] x = null;
-        float[] y = null;
         try {
             FileReader fileReader = new FileReader(tspfile);
             Scanner s = new Scanner(new File(tspfile));
@@ -58,7 +60,7 @@ public class readFile {
                 PrintWriter writer = new PrintWriter("random-lenghts.dat", "UTF-8");
                 int[] verylongarray = new int[numberofpaths];
                 for(int uptoamillion = 0; uptoamillion < numberofpaths; uptoamillion++) {
-                    int start = (int)Math.floor(Math.random() * n);
+                    int start = (int)(Math.random() * n);
                     int l = 0;
                     ArrayList<Integer> tourshuffled = new ArrayList<Integer>();
                     for(int i = 0; i < n; i++) {
@@ -73,23 +75,23 @@ public class readFile {
                         if(firstnode) {
                             firstnode = false;
                             if(type.contains("GEO")) {
-                                l = l + geo(start,index,x,y);
+                                l = l + geo(start,index);
                             } else {
-                                l = l + euc_2d(start,index,x,y);
+                                l = l + euc_2d(start,index);
                             }
                         } else {
                             if(type.contains("GEO")) {
-                                l = l + geo(lastone,index,x,y);
+                                l = l + geo(lastone,index);
                             } else {
-                                l = l + euc_2d(lastone,index,x,y);
+                                l = l + euc_2d(lastone,index);
                             }
                         }
                         lastone = index;
                     }
                     if(type.contains("GEO")) {
-                        l = l + geo(lastone,start,x,y);
+                        l = l + geo(lastone,start);
                     } else {
-                        l = l + euc_2d(lastone,start,x,y);
+                        l = l + euc_2d(lastone,start);
                     }
                     writer.println(l);
                     verylongarray[uptoamillion] = l;
@@ -100,8 +102,7 @@ public class readFile {
                 for(int i = 0; i < numberofpaths; i++) {
                     if(verylongarray[i] > max) {
                         max = verylongarray[i];
-                    }
-                    if(verylongarray[i] < min) {
+                    } else if(verylongarray[i] < min) {
                         min = verylongarray[i];
                     }
                 }
@@ -117,13 +118,13 @@ public class readFile {
         
     }
     
-    public static int euc_2d(int i, int j, float[] x, float[] y){
+    public static int euc_2d(int i, int j){
     	float xd = x[i] - x[j];
     	float yd = y[i] - y[j];
     	return (int)(Math.sqrt(xd * xd + yd * yd));
     }
     
-    public static int geo( int i, int j, float[] x, float[] y ) {
+    public static int geo(int i, int j) {
         double latitude1 = Math.PI * (Math.floor(x[i]) + 5.0 * (x[i] - Math.floor(x[i])) / 3.0) / 180.0;
         double longitude1 = Math.PI * (Math.floor(y[i]) + 5.0 * (y[i] - Math.floor(y[i])) / 3.0) / 180.0;
         double latitude2 = Math.PI * (Math.floor(x[j]) + 5.0 * (x[j] - Math.floor(x[j])) / 3.0) / 180.0;
