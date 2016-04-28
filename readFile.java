@@ -126,10 +126,10 @@ public class readFile {
     }
     
     public static int geo(int i, int j) {
-        double latitude1 = Math.PI * (Math.floor(x[i]) + 5.0 * (x[i] - Math.floor(x[i])) / 3.0) / 180.0;
-        double longitude1 = Math.PI * (Math.floor(y[i]) + 5.0 * (y[i] - Math.floor(y[i])) / 3.0) / 180.0;
-        double latitude2 = Math.PI * (Math.floor(x[j]) + 5.0 * (x[j] - Math.floor(x[j])) / 3.0) / 180.0;
-        double longitude2 = Math.PI * (Math.floor(y[j]) + 5.0 * (y[j] - Math.floor(y[j])) / 3.0) / 180.0;
+        double latitude1 = Math.PI * ((int)(x[i]) + 5.0 * (x[i] - (int)(x[i])) / 3.0) / 180.0;
+        double longitude1 = Math.PI * ((int)(y[i]) + 5.0 * (y[i] - (int)(y[i])) / 3.0) / 180.0;
+        double latitude2 = Math.PI * ((int)(x[j]) + 5.0 * (x[j] - (int)(x[j])) / 3.0) / 180.0;
+        double longitude2 = Math.PI * ((int)(y[j]) + 5.0 * (y[j] - (int)(y[j])) / 3.0) / 180.0;
         double q = Math.cos(longitude1 - longitude2);
         return (int)(6378.388 * Math.acos(0.5 * ((1.0 + q) * Math.cos(latitude1 - latitude2) - (1.0 - q) * Math.cos(latitude1 + latitude2))) + 1.0);
     }
