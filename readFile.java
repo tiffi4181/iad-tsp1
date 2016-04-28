@@ -48,44 +48,68 @@ public class readFile {
             }
             bufferedReader.close();
             s.close();
-            PrintWriter writer = new PrintWriter(tspfile + "-random-lenghts.txt", "UTF-8");
-            long[] verylongarray = new long[1000000];
-            for(int uptoamillion = 0; uptoamillion < 1000000; uptoamillion++) {
-                int[] tour = new int[n];
-                int start = (int)Math.floor(Math.random() * n);
-                tour[0] = start;
-                for(int i = 1; i < n; i++) {
-                    tour[i] = -1;
-                }
-                int i = 1;
-                long l = 0;
-                while(i < n) {
-                    int random = (int)Math.floor(Math.random() * n);
+            System.out.println("Data saved. What do you want to do?");
+            System.out.print("Return 0 for calculation of optimum path, or 1 for generation of random paths: ");
+            int choice = Keyboard.readInt();
+            if (choice == 0) {
+                // Theresas stuff
+            } else if (choice == 1) {
+                
+                System.out.println("Generating random paths...");
+                PrintWriter writer = new PrintWriter(tspfile + "-random-lenghts.txt", "UTF-8");
+                int[] verylongarray = new int[1000000];
+                for(int uptoamillion = 0; uptoamillion < 1000000; uptoamillion++) {
+                    int[] tour = new int[n];
+                    int start = (int)Math.floor(Math.random() * n);
+                    tour[0] = start;
+                    for(int i = 1; i < n; i++) {
+                        tour[i] = -1;
+                    }
+                    int i = 1;
+                    int l = 0;
+                    while(i < n) {
+                        int random = (int)Math.floor(Math.random() * n);
                     boolean found = false;
-                    for (int j = 0; j < i; j++) {
-                        if (random == tour[j]) {
-                            found = true;
+                        for (int j = 0; j < i; j++) {
+                            if (random == tour[j]) {
+                                found = true;
+                            }
+                        }
+                        if(!found) {
+                            tour[i] = random;
+                            if(type.contains("GEO")) {
+                                l = l + geo(tour[i-1],tour[i],x,y);
+                            } else {
+                                l = l + euc_2d(tour[i-1],tour[i],x,y);
+                            }
+                            i++;
                         }
                     }
-                    if(!found) {
-                        tour[i] = random;
-                        if(type.contains("GEO")) {
-                            l = l + geo(tour[i-1],tour[i],x,y);
-                        } else {
-                            l = l + euc_2d(tour[i-1],tour[i],x,y);
-                        }
-                        i++;
+                    if(type.contains("GEO")) {
+                        l = l + geo(tour[n-1],tour[0],x,y);
+                    } else {
+                        l = l + euc_2d(tour[n-1],tour[0],x,y);
+                    }
+                    writer.println(l);
+                    verylongarray[uptoamillion] = l;
+                }
+                writer.close();
+                int max = 0;
+                for(int i = 0; i < 1000000; i++) {
+                    if(tour[i] > max) {
+                        max = tour[i];
                     }
                 }
-                if(type.contains("GEO")) {
-                    l = l + geo(tour[n-1],tour[0],x,y);
-                } else {
-                    l = l + euc_2d(tour[n-1],tour[0],x,y);
+                int min = max;
+                for(int i = 0; i < 1000000; i++) {
+                    if(tour[i] < min) {
+                        min = tour[i];
+                    }
                 }
-                writer.println(l);
-                verylongarray[uptoamillion] = l;
+                System.out.println("Min: " + min + ", Max: " + max);
+            } else {
+                System.out.println("Incorrect input, terminating...");
             }
-            writer.close();
         } catch(FileNotFoundException ex) {
             System.out.println("Unable to open file'" + tspfile + "'");
         } catch(IOException ex) {
