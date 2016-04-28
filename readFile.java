@@ -10,28 +10,22 @@ public class readFile {
     public static float[] y = null;
     
     public static void main(String[] args) {
-        System.out.print("Enter file name of data set: ");
+        System.out.print("Enter name of data set: ");
         String tspfile = Keyboard.readString();
         String line = null;
         try {
-            FileReader fileReader = new FileReader(tspfile);
-            Scanner s = new Scanner(new File(tspfile));
+            FileReader fileReader = new FileReader(tspfile + ".tsp");
+            Scanner s = new Scanner(new File(tspfile + ".tsp"));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            while (!((line = bufferedReader.readLine()).contains("DIMENSION"))) {
-                System.out.println(line);
-            }
+            while (!((line = bufferedReader.readLine()).contains("DIMENSION"))) { }
             int dim = Integer.parseInt((line.split(": "))[1]);
             x = new float[dim];
             y = new float[dim];
             System.out.println("This data set should contain " + dim + " data points. ");
-            while (!((line = bufferedReader.readLine()).contains("EDGE_WEIGHT_TYPE"))) {
-                System.out.println(line);
-            }
+            while (!((line = bufferedReader.readLine()).contains("EDGE_WEIGHT_TYPE"))) { }
             String type = (line.split(": "))[1];
             System.out.println("This data set contains information of " + type + " type. ");
-            while (!((line = bufferedReader.readLine()).contains("NODE_COORD_SECTION"))) {
-                System.out.println(line);
-            }
+            while (!((line = bufferedReader.readLine()).contains("NODE_COORD_SECTION"))) { }
             int n = 0;
             while(!(s.nextLine().contains("NODE_COORD_SECTION"))) { }
             while (!(s.next().contains("EOF"))) {
