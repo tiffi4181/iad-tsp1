@@ -54,11 +54,12 @@ public class readFile {
             if (choice == 0) {
                 // Theresas stuff
             } else if (choice == 1) {
-                
+                System.out.print("How many paths to generate? ");
+                int numberofpaths = Keyboard.readInt();
                 System.out.println("Generating random paths...");
                 PrintWriter writer = new PrintWriter(tspfile + "-random-lenghts.txt", "UTF-8");
-                int[] verylongarray = new int[1000000];
-                for(int uptoamillion = 0; uptoamillion < 1000000; uptoamillion++) {
+                int[] verylongarray = new int[numberofpaths];
+                for(int uptoamillion = 0; uptoamillion < numberofpaths; uptoamillion++) {
                     int[] tour = new int[n];
                     int start = (int)Math.floor(Math.random() * n);
                     tour[0] = start;
@@ -95,15 +96,15 @@ public class readFile {
                 }
                 writer.close();
                 int max = 0;
-                for(int i = 0; i < 1000000; i++) {
-                    if(tour[i] > max) {
-                        max = tour[i];
+                for(int i = 0; i < numberofpaths; i++) {
+                    if(verylongarray[i] > max) {
+                        max = verylongarray[i];
                     }
                 }
                 int min = max;
-                for(int i = 0; i < 1000000; i++) {
-                    if(tour[i] < min) {
-                        min = tour[i];
+                for(int i = 0; i < numberofpaths; i++) {
+                    if(verylongarray[i] < min) {
+                        min = verylongarray[i];
                     }
                 }
                 System.out.println("Min: " + min + ", Max: " + max);
