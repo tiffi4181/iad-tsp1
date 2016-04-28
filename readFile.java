@@ -51,6 +51,25 @@ public class readFile {
                 System.out.print("How many paths to generate? ");
                 int numberofpaths = Keyboard.readInt();
                 System.out.println("Generating random paths...");
+                int[][] distance = new int[n][n];
+                if(type.contains("GEO")) {
+                    for(int i = 0; i < n; i++) {
+                        for(int j = 0; j < i; j++) {
+                            distance[i][j] = geo(i,j);
+                        }
+                    }
+                } else {
+                    for(int i = 0; i < n; i++) {
+                        for(int j = 0; j < i; j++) {
+                            distance[i][j] = euc_2d(i,j);
+                        }
+                    }
+                }
+                for(int i = 0; i < n; i++) {
+                    for(int j = i+1; j < n; j++) {
+                        distance[i][j] = distance[j][i];
+                    }
+                }
                 PrintWriter writer = new PrintWriter("random-lenghts.dat", "UTF-8");
                 int[] verylongarray = new int[numberofpaths];
                 for(int uptoamillion = 0; uptoamillion < numberofpaths; uptoamillion++) {
@@ -68,25 +87,13 @@ public class readFile {
                     for(int index : tourshuffled) {
                         if(firstnode) {
                             firstnode = false;
-                            if(type.contains("GEO")) {
-                                l = l + geo(start,index);
-                            } else {
-                                l = l + euc_2d(start,index);
-                            }
+                            l = l + distance[start][index];
                         } else {
-                            if(type.contains("GEO")) {
-                                l = l + geo(lastone,index);
-                            } else {
-                                l = l + euc_2d(lastone,index);
-                            }
+                            l = l + distance[lastone][index];
                         }
                         lastone = index;
                     }
-                    if(type.contains("GEO")) {
-                        l = l + geo(lastone,start);
-                    } else {
-                        l = l + euc_2d(lastone,start);
-                    }
+                    l = l + distance[lastone][start];
                     writer.println(l);
                     verylongarray[uptoamillion] = l;
                 }
