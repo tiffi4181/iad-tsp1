@@ -1,5 +1,3 @@
-// Ja, guten Morgen!
-
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -48,23 +46,29 @@ public class readFile {
             System.out.print("Return 0 for calculation of optimum path, or 1 for generation of random paths: ");
             int choice = Keyboard.readInt();
             if (choice == 0) {
-                // Theresas stuff
+                Scanner t = new Scanner(new File(tspfile + ".opt.tour"));
+                while(!(t.next().contains("TOUR_SECTION"))) { }
+                int optdistance = 0;
+                int r = t.nextInt();
+                int start = r;
+                while(t.hasNextInt()) {
+                	int q = t.nextInt();
+                	if(q > 0) {
+                		optdistance += getDistance(type, (r - 1), (q - 1));
+                		r = q;
+                	}
+                }
+                optdistance += getDistance(type, (r - 1), (start - 1));
+                System.out.println("The optimal distance as of the given file is " + optdistance + ".");
+                
             } else if (choice == 1) {
                 System.out.print("How many paths to generate? ");
                 int numberofpaths = Keyboard.readInt();
                 System.out.println("Generating random paths...");
                 int[][] distance = new int[n][n];
-                if(type.contains("GEO")) {
-                    for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < i; j++) {
-                            distance[i][j] = geo(i,j);
-                        }
-                    }
-                } else {
-                    for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < i; j++) {
-                            distance[i][j] = euc_2d(i,j);
-                        }
+                for(int i = 0; i < n; i++) {
+                    for(int j = 0; j < i; j++) {
+                        distance[i][j] = getDistance(type, i, j);
                     }
                 }
                 for(int i = 0; i < n; i++) {
@@ -89,13 +93,13 @@ public class readFile {
                     for(int index : tourshuffled) {
                         if(firstnode) {
                             firstnode = false;
-                            l = l + distance[start][index];
+                            l += distance[start][index];
                         } else {
-                            l = l + distance[lastone][index];
+                            l += distance[lastone][index];
                         }
                         lastone = index;
                     }
-                    l = l + distance[lastone][start];
+                    l += distance[lastone][start];
                     writer.println(l);
                     verylongarray[uptoamillion] = l;
                 }
@@ -120,19 +124,19 @@ public class readFile {
         }
         
     }
-    
-    public static int euc_2d(int i, int j){
-    	float xd = x[i] - x[j];
-    	float yd = y[i] - y[j];
-    	return (int)(Math.sqrt(xd * xd + yd * yd));
-    }
-    
-    public static int geo(int i, int j) {
-        double latitude1 = Math.PI * ((int)(x[i]) + 5.0 * (x[i] - (int)(x[i])) / 3.0) / 180.0;
-        double longitude1 = Math.PI * ((int)(y[i]) + 5.0 * (y[i] - (int)(y[i])) / 3.0) / 180.0;
-        double latitude2 = Math.PI * ((int)(x[j]) + 5.0 * (x[j] - (int)(x[j])) / 3.0) / 180.0;
-        double longitude2 = Math.PI * ((int)(y[j]) + 5.0 * (y[j] - (int)(y[j])) / 3.0) / 180.0;
-        double q = Math.cos(longitude1 - longitude2);
-        return (int)(6378.388 * Math.acos(0.5 * ((1.0 + q) * Math.cos(latitude1 - latitude2) - (1.0 - q) * Math.cos(latitude1 + latitude2))) + 1.0);
+
+    public static int getDistance(String type, int i, int j){
+    	if(type.contains("GEO")) {    		
+            double latitude1 = Math.PI * ((int)(x[i]) + 5.0 * (x[i] - (int)(x[i])) / 3.0) / 180.0;
+            double longitude1 = Math.PI * ((int)(y[i]) + 5.0 * (y[i] - (int)(y[i])) / 3.0) / 180.0;
+            double latitude2 = Math.PI * ((int)(x[j]) + 5.0 * (x[j] - (int)(x[j])) / 3.0) / 180.0;
+            double longitude2 = Math.PI * ((int)(y[j]) + 5.0 * (y[j] - (int)(y[j])) / 3.0) / 180.0;
+            double q = Math.cos(longitude1 - longitude2);
+            return (int)(6378.388 * Math.acos(0.5 * ((1.0 + q) * Math.cos(latitude1 - latitude2) - (1.0 - q) * Math.cos(latitude1 + latitude2))) + 1.0);
+    	} else {
+            float xd = x[i] - x[j];
+            float yd = y[i] - y[j];
+            return (int)(Math.round(Math.sqrt(xd * xd + yd * yd)));
+    	}
     }
 }

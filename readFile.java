@@ -60,6 +60,7 @@ public class readFile {
                 }
                 optdistance += getDistance(type, (r - 1), (start - 1));
                 System.out.println("The optimal distance as of the given file is " + optdistance + ".");
+                t.close();
                 
             } else if (choice == 1) {
                 System.out.print("How many paths to generate? ");
