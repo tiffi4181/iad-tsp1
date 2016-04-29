@@ -1,5 +1,3 @@
-// Ja, guten Morgen!
-
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -48,7 +46,21 @@ public class readFile {
             System.out.print("Return 0 for calculation of optimum path, or 1 for generation of random paths: ");
             int choice = Keyboard.readInt();
             if (choice == 0) {
-                // Theresas stuff
+                Scanner t = new Scanner(new File(tspfile + ".opt.tour"));
+                while(!(t.next().contains("TOUR_SECTION"))){}
+                int optdistance=0;
+                int r=t.nextInt();
+                int start=r;
+                while(t.hasNextInt()){
+                	int q=t.nextInt();
+                	if(q>0){
+                		optdistance+=getDistance(type, (r-1), (q-1));
+                		r=q;
+                	}
+                }
+                optdistance+=getDistance(type, (r-1), (start-1));
+                System.out.println(optdistance);
+                
             } else if (choice == 1) {
                 System.out.print("How many paths to generate? ");
                 int numberofpaths = Keyboard.readInt();
@@ -59,6 +71,7 @@ public class readFile {
                         for(int j = 0; j < i; j++) {
                             distance[i][j] = geo(i,j);
                         }
+ 
                     }
                 } else {
                     for(int i = 0; i < n; i++) {
@@ -120,11 +133,20 @@ public class readFile {
         }
         
     }
+
+    public static int getDistance(String type, int i, int j){
+    	if(type.contains("GEO")) {    		
+    		return geo(i, j);
+    	}
+    	else{
+    		return euc_2d(i, j);
+    	}
+    }
     
     public static int euc_2d(int i, int j){
     	float xd = x[i] - x[j];
     	float yd = y[i] - y[j];
-    	return (int)(Math.sqrt(xd * xd + yd * yd));
+    	return (int)(Math.round(Math.sqrt(xd * xd + yd * yd)));
     }
     
     public static int geo(int i, int j) {
